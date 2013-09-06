@@ -63,7 +63,7 @@ class OSignalMouse extends OSignalType<OSignalMouse -> Void> implements IOSignal
             case MOUSE_WHEEL: displayTarget.addEventListener(MouseEvent.MOUSE_WHEEL, mouseHandler);
             case ROLL_OUT: displayTarget.addEventListener(MouseEvent.ROLL_OUT, mouseHandler);
             case ROLL_OVER: displayTarget.addEventListener(MouseEvent.ROLL_OVER, mouseHandler);
-            default: OCore.error("The mouse event you're trying to add does not exist. " + pos);
+            //default: OCore.error("The mouse event you're trying to add does not exist. " + pos);
         }
     }
 
