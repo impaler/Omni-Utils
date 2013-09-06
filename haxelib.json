@@ -1,0 +1,11 @@
+{
+	"name": "Omni-Utils",
+	"url": "https://github.com/impaler/Omni-Utils.git",
+	"license": "MIT",
+	"tags": ["gui, openfl"],
+	"description": "General purpose Haxe utilities.",
+	"version": "0.0.1",
+	"releasenote": "",
+	"contributors": [""],
+	"dependencies": { "openfl": "" }
+}

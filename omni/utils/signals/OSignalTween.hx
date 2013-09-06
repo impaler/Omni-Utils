@@ -6,10 +6,12 @@ import com.eclecticdesignstudio.motion.actuators.GenericActuator;
 class OSignalTween
 {
 
-    public var onComplete:OSignalVoid;
-    public var onUpdate:OSignalVoid;
+    public var onComplete:OSignalTween;
+    public var onUpdate:OSignalTween;
 
     public var properties:Array<Dynamic>;
+
+	//the target
 
     public function new()
     {

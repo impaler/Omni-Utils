@@ -1,6 +1,5 @@
 package omni.utils.signals;
 
-class OSignalFloat extends OSignalType<Float -> Void>
-{
+import omni.utils.signals.OSignalType.IOSignal;
 
-}
+class OSignalFloat extends OSignalType<Float -> Void> implements IOSignal<Float -> Void> {}

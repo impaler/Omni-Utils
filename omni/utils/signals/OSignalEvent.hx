@@ -1,21 +1,20 @@
 package omni.utils.signals;
 
-import omni.components.core.OCore;
+import omni.utils.signals.OSignalType.IOSignal;
 import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.display.DisplayObjectContainer;
 
 /**
 * 
-* NME Based Mouse Signal
+* OpenFL Based Mouse Signal
 * 
-* Provides a new API and organisation for the event system of all mouse events to an nme.display
-* .DisplayObjectContainer.
+* Provides a new API and organisation for the Flash Event System
 * 
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
 **/
-class OCoreEvent extends OSignalType<OCoreEvent -> Void>
+class OSignalEvent extends OSignalType<OSignalEvent -> Void> implements IOSignal<OSignalEvent -> Void>
 {
     inline public static var ACTIVATE = "activate";
     inline public static var ADDED = "added";
@@ -103,7 +102,7 @@ class OCoreEvent extends OSignalType<OCoreEvent -> Void>
             case KEY_FOCUS_CHANGE: displayTarget.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, eventHandler);
             case MOUSE_FOCUS_CHANGE: displayTarget.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, eventHandler);
 
-            default: OCore.error("The event you're trying to add does not exist. " + pos);
+            //default://error logging;
         }
     }
 
@@ -157,7 +156,7 @@ class OCoreEvent extends OSignalType<OCoreEvent -> Void>
     function eventHandler(e:Event)
     {
         this.event = e;
-        dispatch(this);
+        this.dispatch(this);
     }
 
     override public function destroy():Void

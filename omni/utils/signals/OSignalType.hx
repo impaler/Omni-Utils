@@ -1,17 +1,15 @@
 package omni.utils.signals;
 
-import omni.components.core.interfaces.IDestroyable;
-
 /**
 * 
-* NME Based Signal Event System
+* Haxe Based Signal Event System
 * 
 * Provides a basic signal based event system for a custom api and custom features.
 * 
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
 **/
-class OSignalType<T> implements IDestroyable
+class OSignalType<T>
 {
 
     private var listeners:List<T>;
@@ -25,14 +23,12 @@ class OSignalType<T> implements IDestroyable
         removeAll();
     }
 
-    public function add(listener:T)
+    public function add(listener:T):Void
     {
         listeners.add(listener);
     }
 
-    //todo list of exposablelisteners???
-
-    public function addOnce(listener:T, ?pos:haxe.PosInfos)
+    public function addOnce(listener:T, ?pos:haxe.PosInfos):Void
     {
         if (exists(listener))
         {
@@ -41,7 +37,7 @@ class OSignalType<T> implements IDestroyable
         exposableListener = listener;
     }
 
-    public function addFirst(listener:T, ?pos:haxe.PosInfos)
+    public function addFirst(listener:T, ?pos:haxe.PosInfos):Void
     {
         listeners.push(listener);
     }
@@ -98,7 +94,7 @@ class OSignalType<T> implements IDestroyable
         }
         catch (e:Dynamic)
         {
-            //			OCore.error("OSignal error: " + e + ", called from: " + Std.string(pos));
+
         }
     }
 
@@ -117,4 +113,16 @@ class OSignalType<T> implements IDestroyable
         listeners = null;
         exposableListener = null;
     }
+}
+
+interface IOSignal<T>
+{
+	function exists(listener:T):Bool;
+
+	function remove(listener:T):Void;
+	function removeAll():Void;
+
+	function add(listener:T):Void;
+	function addFirst(listener:T, ?pos:haxe.PosInfos):Void;
+	function addOnce(listener:T, ?pos:haxe.PosInfos):Void;
 }
