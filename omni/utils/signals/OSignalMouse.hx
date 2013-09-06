@@ -6,10 +6,9 @@ import flash.display.DisplayObjectContainer;
 
 /**
 * 
-* NME Based Mouse Signal
+* OpenFL Based Mouse Signal
 * 
-* Provides a new API and organisation for the event system of all mouse events to an nme.display
-* .DisplayObjectContainer.
+* Provides a new API and organisation for the Flash Event System
 * 
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
