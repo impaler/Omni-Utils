@@ -222,62 +222,62 @@ class ColorUtils
 	/**
      * 0xffc0c0c0
      */
-    public static var LIGHT_GRAY:Int = 0xc0c0c0;
+    static public inline var LIGHT_GRAY:Int = 0xc0c0c0;
 
 	/**
      * 0xff808080
      */
-    public static var GRAY:Int = 0x808080;
+    static public inline var GRAY:Int = 0x808080;
 
 	/**
      * 0xff404040
      */
-    public static var DARK_GRAY:Int = 0xff404040;
+    static public inline var DARK_GRAY:Int = 0xff404040;
 
 	/**
      * 0xffca2900
      */
-    public static var DARKER_ORANGE:Int = 0xffca2900;
+    static public inline var DARKER_ORANGE:Int = 0xffca2900;
 
 	/**
      * 0xfffe963e
      */
-    public static var ORANGE_BRIGHT:Int = 0xfffe963e;
+    static public inline var ORANGE_BRIGHT:Int = 0xfffe963e;
 
 	/**
      * 0xffff6c00
      */
-    public static var ORANGE:Int = 0xffff6c00;
+    static public inline var ORANGE:Int = 0xffff6c00;
 
 	/**
      * 0xffffa360
      */
-    public static var LIGHT_ORANGE:Int = 0xffffa360;
+    static public inline var LIGHT_ORANGE:Int = 0xffffa360;
 
 	/**
      * 0xffFFC200
      */
-    public static var HALO_ORANGE:Int = 0xffFFC200;
+    static public inline var HALO_ORANGE:Int = 0xffFFC200;
 
 	/**
      * 0xffd4ff00
      */
-    public static var GREEN_LIGHT:Int = 0xffd4ff00;
+    static public inline var GREEN_LIGHT:Int = 0xffd4ff00;
 
 	/**
      * 0xff80FF4D
      */
-    public static var HALO_GREEN:Int = 0xff80FF4D;
+    static public inline var HALO_GREEN:Int = 0xff80FF4D;
 
 	/**
      * 0xffff00ff
      */
-    public static var MAGENTA:Int = 0xffff00ff;
+    static public inline var MAGENTA:Int = 0xffff00ff;
 
 	/**
      * 0xff2BF5F5
      */
-    public static var HALO_BLUE:Int = 0xff2BF5F5;
+    static public inline var HALO_BLUE:Int = 0xff2BF5F5;
 
 	/**
 	*  Simple mehtod to return a random Color
