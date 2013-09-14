@@ -50,11 +50,6 @@ class ColorUtils
 	static public inline var BLACK:Int = 0xff000000;
 
 	/**
-	 * 0xff808080
-	 */
-	static public inline var GRAY:Int = 0xff808080;
-
-	/**
 	 * 0xff964B00
 	 */
 	static public inline var BROWN:Int = 0xff964B00;
