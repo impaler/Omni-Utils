@@ -12,23 +12,31 @@ package omni.utils.signals;
 class OSignalType<T>
 {
 
-    private var listeners:List<T>;
-    private var exposableListener:T;
+    private var listeners:List<Dynamic>;
+    private var exposableListener:Dynamic;
+
+	public var length(get_length, null):Int;
 
     public var enabled:Bool;
 
     public function new()
     {
+	    listeners = new List<Dynamic>();
         enabled = true;
         removeAll();
     }
 
-    public function add(listener:T):Void
+	public function get_length():Int
+	{
+		return listeners.length;
+	}
+
+    public function add(listener:Dynamic):Void
     {
         listeners.add(listener);
     }
 
-    public function addOnce(listener:T, ?pos:haxe.PosInfos):Void
+    public function addOnce(listener:Dynamic, ?pos:haxe.PosInfos):Void
     {
         if (exists(listener))
         {
@@ -37,12 +45,12 @@ class OSignalType<T>
         exposableListener = listener;
     }
 
-    public function addFirst(listener:T, ?pos:haxe.PosInfos):Void
+    public function addFirst(listener:Dynamic, ?pos:haxe.PosInfos):Void
     {
         listeners.push(listener);
     }
 
-    public function remove(listener:T):Void
+    public function remove(listener:Dynamic):Void
     {
         for (l in listeners)
         {
@@ -60,13 +68,14 @@ class OSignalType<T>
 
     public function removeAll():Void
     {
-        listeners = new List<T>();
+        listeners = new List<Dynamic>();
         exposableListener = null;
     }
 
-    public function dispatch(?p1:Dynamic, ?p2:Dynamic, ?p3:Dynamic, ?p4:Dynamic, ?pos:haxe.PosInfos):Void
+    public function dispatch(p1:T = null, p2:T = null, p3:T = null, p4:T = null, ?pos:haxe.PosInfos):Void
     {
         if (!enabled) return;
+
         var args = new Array<Dynamic>();
         for (p in [p1, p2, p3, p4])
             if (p != null)
@@ -86,7 +95,7 @@ class OSignalType<T>
         }
     }
 
-    function callMethod(listener:T, ?args:Array<Dynamic>, ?pos:haxe.PosInfos)
+    function callMethod(listener:Dynamic, ?args:Array<Dynamic>, ?pos:haxe.PosInfos)
     {
         try
         {
@@ -98,7 +107,7 @@ class OSignalType<T>
         }
     }
 
-    public function exists(listener:T):Bool
+    public function exists(listener:Dynamic):Bool
     {
         for (l in listeners)
         {
@@ -113,16 +122,4 @@ class OSignalType<T>
         listeners = null;
         exposableListener = null;
     }
-}
-
-interface IOSignal<T>
-{
-	function exists(listener:T):Bool;
-
-	function remove(listener:T):Void;
-	function removeAll():Void;
-
-	function add(listener:T):Void;
-	function addFirst(listener:T, ?pos:haxe.PosInfos):Void;
-	function addOnce(listener:T, ?pos:haxe.PosInfos):Void;
 }

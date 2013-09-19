@@ -1,6 +1,7 @@
 package omni.utils.signals;
 
-import omni.utils.signals.OSignalType.IOSignal;
+import omni.utils.signals.IOSignalType;
+
 import flash.events.MouseEvent;
 import flash.display.DisplayObjectContainer;
 
@@ -13,7 +14,7 @@ import flash.display.DisplayObjectContainer;
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
 **/
-class OSignalMouse extends OSignalType<OSignalMouse -> Void> implements IOSignal<OSignalMouse -> Void>
+class OSignalMouse extends OSignalType<OSignalMouse> implements IOSignalType<OSignalMouse>
 {
 
     inline public static var CLICK = "mouseclick";

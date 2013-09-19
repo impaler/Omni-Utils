@@ -1,6 +1,6 @@
 package omni.utils.signals;
 
-import omni.utils.signals.OSignalType.IOSignal;
+import omni.utils.signals.IOSignalType;
 import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.display.DisplayObjectContainer;
@@ -14,7 +14,7 @@ import flash.display.DisplayObjectContainer;
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
 **/
-class OSignalEvent extends OSignalType<OSignalEvent -> Void> implements IOSignal<OSignalEvent -> Void>
+class OSignalEvent extends OSignalType<OSignalEvent> implements IOSignalType<OSignalEvent>
 {
     inline public static var ACTIVATE = "activate";
     inline public static var ADDED = "added";

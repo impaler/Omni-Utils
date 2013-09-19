@@ -1,5 +1,5 @@
 package omni.utils.signals;
 
-import omni.utils.signals.OSignalType.IOSignal;
+import omni.utils.signals.IOSignalType;
 
-class OSignalBool extends OSignalType<Bool -> Void> implements IOSignal<Bool -> Void> {}
+class OSignalBool extends OSignalType<Bool> implements IOSignalType<Bool> {}
