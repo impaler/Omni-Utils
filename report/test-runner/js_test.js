@@ -89,6 +89,48 @@ List.prototype = {
 }
 var IMap = function() { }
 IMap.__name__ = ["IMap"];
+var massive = {}
+massive.munit = {}
+massive.munit.TestSuite = function() {
+	this.tests = new Array();
+	this.index = 0;
+};
+massive.munit.TestSuite.__name__ = ["massive","munit","TestSuite"];
+massive.munit.TestSuite.prototype = {
+	sortByName: function(x,y) {
+		var xName = Type.getClassName(x);
+		var yName = Type.getClassName(y);
+		if(xName == yName) return 0;
+		if(xName > yName) return 1; else return -1;
+	}
+	,sortTests: function() {
+		this.tests.sort($bind(this,this.sortByName));
+	}
+	,repeat: function() {
+		if(this.index > 0) this.index--;
+	}
+	,next: function() {
+		return this.hasNext()?this.tests[this.index++]:null;
+	}
+	,hasNext: function() {
+		return this.index < this.tests.length;
+	}
+	,add: function(test) {
+		this.tests.push(test);
+		this.sortTests();
+	}
+	,__class__: massive.munit.TestSuite
+}
+var OmniUtilsTestSuite = function() {
+	massive.munit.TestSuite.call(this);
+	this.add(signals.OSignalTest);
+	this.add(signals.OSignalIntTest);
+};
+OmniUtilsTestSuite.__name__ = ["OmniUtilsTestSuite"];
+OmniUtilsTestSuite.__super__ = massive.munit.TestSuite;
+OmniUtilsTestSuite.prototype = $extend(massive.munit.TestSuite.prototype,{
+	__class__: OmniUtilsTestSuite
+});
 var Reflect = function() { }
 Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
@@ -159,7 +201,7 @@ StringTools.lpad = function(s,c,l) {
 }
 var TestMain = function() {
 	var suites = new Array();
-	suites.push(TestSuite);
+	suites.push(OmniUtilsTestSuite);
 	var client = new massive.munit.client.RichPrintClient();
 	var httpClient = new massive.munit.client.HTTPClient(new massive.munit.client.SummaryReportClient());
 	var runner = new massive.munit.TestRunner(client);
@@ -180,48 +222,6 @@ TestMain.prototype = {
 	}
 	,__class__: TestMain
 }
-var massive = {}
-massive.munit = {}
-massive.munit.TestSuite = function() {
-	this.tests = new Array();
-	this.index = 0;
-};
-massive.munit.TestSuite.__name__ = ["massive","munit","TestSuite"];
-massive.munit.TestSuite.prototype = {
-	sortByName: function(x,y) {
-		var xName = Type.getClassName(x);
-		var yName = Type.getClassName(y);
-		if(xName == yName) return 0;
-		if(xName > yName) return 1; else return -1;
-	}
-	,sortTests: function() {
-		this.tests.sort($bind(this,this.sortByName));
-	}
-	,repeat: function() {
-		if(this.index > 0) this.index--;
-	}
-	,next: function() {
-		return this.hasNext()?this.tests[this.index++]:null;
-	}
-	,hasNext: function() {
-		return this.index < this.tests.length;
-	}
-	,add: function(test) {
-		this.tests.push(test);
-		this.sortTests();
-	}
-	,__class__: massive.munit.TestSuite
-}
-var TestSuite = function() {
-	massive.munit.TestSuite.call(this);
-	this.add(signals.OSignalDynamicTest);
-	this.add(signals.OSignalIntTest);
-};
-TestSuite.__name__ = ["TestSuite"];
-TestSuite.__super__ = massive.munit.TestSuite;
-TestSuite.prototype = $extend(massive.munit.TestSuite.prototype,{
-	__class__: TestSuite
-});
 var ValueType = { __ename__ : true, __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] }
 ValueType.TNull = ["TNull",0];
 ValueType.TNull.toString = $estr;
@@ -2169,13 +2169,13 @@ omni.utils.signals.IOSignalType.__name__ = ["omni","utils","signals","IOSignalTy
 omni.utils.signals.IOSignalType.prototype = {
 	__class__: omni.utils.signals.IOSignalType
 }
-omni.utils.signals.OSignalType = function() {
+omni.utils.signals.OSignalCore = function() {
 	this.listeners = new List();
-	this.enabled = true;
+	this.set_enabled(true);
 	this.removeAll();
 };
-omni.utils.signals.OSignalType.__name__ = ["omni","utils","signals","OSignalType"];
-omni.utils.signals.OSignalType.prototype = {
+omni.utils.signals.OSignalCore.__name__ = ["omni","utils","signals","OSignalCore"];
+omni.utils.signals.OSignalCore.prototype = {
 	destroy: function() {
 		this.listeners = null;
 		this.exposableListener = null;
@@ -2239,27 +2239,31 @@ omni.utils.signals.OSignalType.prototype = {
 	,add: function(listener) {
 		this.listeners.add(listener);
 	}
-	,get_length: function() {
+	,get_numListeners: function() {
 		return this.listeners.length;
 	}
-	,__class__: omni.utils.signals.OSignalType
+	,set_enabled: function(value) {
+		this.enabled = value;
+		return this.enabled;
+	}
+	,__class__: omni.utils.signals.OSignalCore
 }
-omni.utils.signals.OSignalDynamic = function() {
-	omni.utils.signals.OSignalType.call(this);
+omni.utils.signals.OSignal = function() {
+	omni.utils.signals.OSignalCore.call(this);
 };
-omni.utils.signals.OSignalDynamic.__name__ = ["omni","utils","signals","OSignalDynamic"];
-omni.utils.signals.OSignalDynamic.__interfaces__ = [omni.utils.signals.IOSignalType];
-omni.utils.signals.OSignalDynamic.__super__ = omni.utils.signals.OSignalType;
-omni.utils.signals.OSignalDynamic.prototype = $extend(omni.utils.signals.OSignalType.prototype,{
-	__class__: omni.utils.signals.OSignalDynamic
+omni.utils.signals.OSignal.__name__ = ["omni","utils","signals","OSignal"];
+omni.utils.signals.OSignal.__interfaces__ = [omni.utils.signals.IOSignalType];
+omni.utils.signals.OSignal.__super__ = omni.utils.signals.OSignalCore;
+omni.utils.signals.OSignal.prototype = $extend(omni.utils.signals.OSignalCore.prototype,{
+	__class__: omni.utils.signals.OSignal
 });
 omni.utils.signals.OSignalInt = function() {
-	omni.utils.signals.OSignalType.call(this);
+	omni.utils.signals.OSignalCore.call(this);
 };
 omni.utils.signals.OSignalInt.__name__ = ["omni","utils","signals","OSignalInt"];
 omni.utils.signals.OSignalInt.__interfaces__ = [omni.utils.signals.IOSignalType];
-omni.utils.signals.OSignalInt.__super__ = omni.utils.signals.OSignalType;
-omni.utils.signals.OSignalInt.prototype = $extend(omni.utils.signals.OSignalType.prototype,{
+omni.utils.signals.OSignalInt.__super__ = omni.utils.signals.OSignalCore;
+omni.utils.signals.OSignalInt.prototype = $extend(omni.utils.signals.OSignalCore.prototype,{
 	__class__: omni.utils.signals.OSignalInt
 });
 var org = {}
@@ -2327,100 +2331,6 @@ org.hamcrest.UnsupportedOperationException.prototype = $extend(org.hamcrest.Exce
 	__class__: org.hamcrest.UnsupportedOperationException
 });
 var signals = {}
-signals.OSignalDynamicTest = function() { }
-signals.OSignalDynamicTest.__name__ = ["signals","OSignalDynamicTest"];
-signals.OSignalDynamicTest.prototype = {
-	testLength: function() {
-		var testFunction0 = function() {
-		};
-		var testFunction1 = function() {
-		};
-		var testFunction2 = function() {
-		};
-		var testFunction3 = function() {
-		};
-		var signal = new omni.utils.signals.OSignalDynamic();
-		signal.add(testFunction0);
-		signal.add(testFunction1);
-		signal.add(testFunction2);
-		signal.add(testFunction3);
-		massive.munit.Assert.isFalse(signal.get_length() == 0,{ fileName : "OSignalDynamicTest.hx", lineNumber : 115, className : "signals.OSignalDynamicTest", methodName : "testLength"});
-		massive.munit.Assert.isTrue(signal.get_length() == 4,{ fileName : "OSignalDynamicTest.hx", lineNumber : 116, className : "signals.OSignalDynamicTest", methodName : "testLength"});
-	}
-	,testRemove: function() {
-		var testFunction0 = function() {
-		};
-		var testFunction1 = function() {
-		};
-		var testFunction2 = function() {
-		};
-		var testFunction3 = function() {
-		};
-		var signal = new omni.utils.signals.OSignalDynamic();
-		signal.add(testFunction0);
-		signal.add(testFunction1);
-		signal.add(testFunction2);
-		signal.add(testFunction3);
-		massive.munit.Assert.isTrue(signal.exists(testFunction0),{ fileName : "OSignalDynamicTest.hx", lineNumber : 87, className : "signals.OSignalDynamicTest", methodName : "testRemove"});
-		signal.remove(testFunction0);
-		massive.munit.Assert.isFalse(signal.exists(testFunction0),{ fileName : "OSignalDynamicTest.hx", lineNumber : 91, className : "signals.OSignalDynamicTest", methodName : "testRemove"});
-		massive.munit.Assert.isTrue(signal.exists(testFunction1),{ fileName : "OSignalDynamicTest.hx", lineNumber : 92, className : "signals.OSignalDynamicTest", methodName : "testRemove"});
-		massive.munit.Assert.isTrue(signal.get_length() == 3,{ fileName : "OSignalDynamicTest.hx", lineNumber : 93, className : "signals.OSignalDynamicTest", methodName : "testRemove"});
-		signal.removeAll();
-		massive.munit.Assert.isTrue(signal.get_length() == 0,{ fileName : "OSignalDynamicTest.hx", lineNumber : 97, className : "signals.OSignalDynamicTest", methodName : "testRemove"});
-		massive.munit.Assert.isFalse(signal.exists(testFunction0),{ fileName : "OSignalDynamicTest.hx", lineNumber : 98, className : "signals.OSignalDynamicTest", methodName : "testRemove"});
-	}
-	,testExists: function() {
-		var testFunction = function() {
-		};
-		var signal = new omni.utils.signals.OSignalDynamic();
-		signal.add(testFunction);
-		massive.munit.Assert.isTrue(signal.exists(testFunction),{ fileName : "OSignalDynamicTest.hx", lineNumber : 67, className : "signals.OSignalDynamicTest", methodName : "testExists"});
-		var signalFalse = new omni.utils.signals.OSignalDynamic();
-		massive.munit.Assert.isFalse(signalFalse.exists(testFunction),{ fileName : "OSignalDynamicTest.hx", lineNumber : 70, className : "signals.OSignalDynamicTest", methodName : "testExists"});
-	}
-	,testAddOnceDispatch: function() {
-		var _g = this;
-		var signal = new omni.utils.signals.OSignalDynamic();
-		signal.addOnce(function() {
-			_g.addOnce++;
-		},{ fileName : "OSignalDynamicTest.hx", lineNumber : 49, className : "signals.OSignalDynamicTest", methodName : "testAddOnceDispatch"});
-		var _g1 = 0;
-		while(_g1 < 10) {
-			var i = _g1++;
-			signal.dispatch(null,null,null,null,{ fileName : "OSignalDynamicTest.hx", lineNumber : 53, className : "signals.OSignalDynamicTest", methodName : "testAddOnceDispatch"});
-		}
-		massive.munit.Assert.isTrue(this.addOnce == 1,{ fileName : "OSignalDynamicTest.hx", lineNumber : 56, className : "signals.OSignalDynamicTest", methodName : "testAddOnceDispatch"});
-	}
-	,testAddMultiDispatch: function() {
-		var _g = this;
-		var signal = new omni.utils.signals.OSignalDynamic();
-		signal.add(function() {
-			_g.signalVoidDispatched++;
-		});
-		var _g1 = 0;
-		while(_g1 < 4) {
-			var i = _g1++;
-			signal.dispatch(null,null,null,null,{ fileName : "OSignalDynamicTest.hx", lineNumber : 39, className : "signals.OSignalDynamicTest", methodName : "testAddMultiDispatch"});
-		}
-		massive.munit.Assert.isTrue(this.signalVoidDispatched == 4,{ fileName : "OSignalDynamicTest.hx", lineNumber : 42, className : "signals.OSignalDynamicTest", methodName : "testAddMultiDispatch"});
-	}
-	,testExample: function() {
-		var _g = this;
-		var signal = new omni.utils.signals.OSignalDynamic();
-		signal.add(function() {
-			_g.dispatched = true;
-		});
-		signal.dispatch(null,null,null,null,{ fileName : "OSignalDynamicTest.hx", lineNumber : 27, className : "signals.OSignalDynamicTest", methodName : "testExample"});
-		massive.munit.Assert.isTrue(this.dispatched,{ fileName : "OSignalDynamicTest.hx", lineNumber : 29, className : "signals.OSignalDynamicTest", methodName : "testExample"});
-	}
-	,setup: function() {
-		this.dispatched = false;
-		this.signalVoidDispatched = 0;
-		this.addOnce = 0;
-	}
-	,__class__: signals.OSignalDynamicTest
-}
 signals.OSignalIntTest = function() { }
 signals.OSignalIntTest.__name__ = ["signals","OSignalIntTest"];
 signals.OSignalIntTest.prototype = {
@@ -2471,6 +2381,100 @@ signals.OSignalIntTest.prototype = {
 	}
 	,__class__: signals.OSignalIntTest
 }
+signals.OSignalTest = function() { }
+signals.OSignalTest.__name__ = ["signals","OSignalTest"];
+signals.OSignalTest.prototype = {
+	testLength: function() {
+		var testFunction0 = function() {
+		};
+		var testFunction1 = function() {
+		};
+		var testFunction2 = function() {
+		};
+		var testFunction3 = function() {
+		};
+		var signal = new omni.utils.signals.OSignal();
+		signal.add(testFunction0);
+		signal.add(testFunction1);
+		signal.add(testFunction2);
+		signal.add(testFunction3);
+		massive.munit.Assert.isFalse(signal.get_numListeners() == 0,{ fileName : "OSignalTest.hx", lineNumber : 114, className : "signals.OSignalTest", methodName : "testLength"});
+		massive.munit.Assert.isTrue(signal.get_numListeners() == 4,{ fileName : "OSignalTest.hx", lineNumber : 115, className : "signals.OSignalTest", methodName : "testLength"});
+	}
+	,testRemove: function() {
+		var testFunction0 = function() {
+		};
+		var testFunction1 = function() {
+		};
+		var testFunction2 = function() {
+		};
+		var testFunction3 = function() {
+		};
+		var signal = new omni.utils.signals.OSignal();
+		signal.add(testFunction0);
+		signal.add(testFunction1);
+		signal.add(testFunction2);
+		signal.add(testFunction3);
+		massive.munit.Assert.isTrue(signal.exists(testFunction0),{ fileName : "OSignalTest.hx", lineNumber : 86, className : "signals.OSignalTest", methodName : "testRemove"});
+		signal.remove(testFunction0);
+		massive.munit.Assert.isFalse(signal.exists(testFunction0),{ fileName : "OSignalTest.hx", lineNumber : 90, className : "signals.OSignalTest", methodName : "testRemove"});
+		massive.munit.Assert.isTrue(signal.exists(testFunction1),{ fileName : "OSignalTest.hx", lineNumber : 91, className : "signals.OSignalTest", methodName : "testRemove"});
+		massive.munit.Assert.isTrue(signal.get_numListeners() == 3,{ fileName : "OSignalTest.hx", lineNumber : 92, className : "signals.OSignalTest", methodName : "testRemove"});
+		signal.removeAll();
+		massive.munit.Assert.isTrue(signal.get_numListeners() == 0,{ fileName : "OSignalTest.hx", lineNumber : 96, className : "signals.OSignalTest", methodName : "testRemove"});
+		massive.munit.Assert.isFalse(signal.exists(testFunction0),{ fileName : "OSignalTest.hx", lineNumber : 97, className : "signals.OSignalTest", methodName : "testRemove"});
+	}
+	,testExists: function() {
+		var testFunction = function() {
+		};
+		var signal = new omni.utils.signals.OSignal();
+		signal.add(testFunction);
+		massive.munit.Assert.isTrue(signal.exists(testFunction),{ fileName : "OSignalTest.hx", lineNumber : 66, className : "signals.OSignalTest", methodName : "testExists"});
+		var signalFalse = new omni.utils.signals.OSignal();
+		massive.munit.Assert.isFalse(signalFalse.exists(testFunction),{ fileName : "OSignalTest.hx", lineNumber : 69, className : "signals.OSignalTest", methodName : "testExists"});
+	}
+	,testAddOnceDispatch: function() {
+		var _g = this;
+		var signal = new omni.utils.signals.OSignal();
+		signal.addOnce(function() {
+			_g.addOnce++;
+		},{ fileName : "OSignalTest.hx", lineNumber : 48, className : "signals.OSignalTest", methodName : "testAddOnceDispatch"});
+		var _g1 = 0;
+		while(_g1 < 10) {
+			var i = _g1++;
+			signal.dispatch(null,null,null,null,{ fileName : "OSignalTest.hx", lineNumber : 52, className : "signals.OSignalTest", methodName : "testAddOnceDispatch"});
+		}
+		massive.munit.Assert.isTrue(this.addOnce == 1,{ fileName : "OSignalTest.hx", lineNumber : 55, className : "signals.OSignalTest", methodName : "testAddOnceDispatch"});
+	}
+	,testAddMultiDispatch: function() {
+		var _g = this;
+		var signal = new omni.utils.signals.OSignal();
+		signal.add(function() {
+			_g.signalVoidDispatched++;
+		});
+		var _g1 = 0;
+		while(_g1 < 4) {
+			var i = _g1++;
+			signal.dispatch(null,null,null,null,{ fileName : "OSignalTest.hx", lineNumber : 38, className : "signals.OSignalTest", methodName : "testAddMultiDispatch"});
+		}
+		massive.munit.Assert.isTrue(this.signalVoidDispatched == 4,{ fileName : "OSignalTest.hx", lineNumber : 41, className : "signals.OSignalTest", methodName : "testAddMultiDispatch"});
+	}
+	,testExample: function() {
+		var _g = this;
+		var signal = new omni.utils.signals.OSignal();
+		signal.add(function() {
+			_g.dispatched = true;
+		});
+		signal.dispatch(null,null,null,null,{ fileName : "OSignalTest.hx", lineNumber : 26, className : "signals.OSignalTest", methodName : "testExample"});
+		massive.munit.Assert.isTrue(this.dispatched,{ fileName : "OSignalTest.hx", lineNumber : 28, className : "signals.OSignalTest", methodName : "testExample"});
+	}
+	,setup: function() {
+		this.dispatched = false;
+		this.signalVoidDispatched = 0;
+		this.addOnce = 0;
+	}
+	,__class__: signals.OSignalTest
+}
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; };
@@ -2519,8 +2523,9 @@ massive.munit.client.PrintClient.DEFAULT_ID = "print";
 massive.munit.client.RichPrintClient.DEFAULT_ID = "RichPrintClient";
 massive.munit.client.SummaryReportClient.DEFAULT_ID = "summary";
 massive.munit.util.Timer.arr = new Array();
-signals.OSignalDynamicTest.__meta__ = { fields : { testLength : { Test : null}, testRemove : { Test : null}, testExists : { Test : null}, testAddOnceDispatch : { Test : null}, testAddMultiDispatch : { Test : null}, testExample : { Test : null}, setup : { Before : null}}};
+omni.utils.signals.OSignalCore.__meta__ = { fields : { enabled : { isVar : null}}};
 signals.OSignalIntTest.__meta__ = { fields : { testIntReturn : { Test : null}, setup : { Before : null}}};
+signals.OSignalTest.__meta__ = { fields : { testLength : { Test : null}, testRemove : { Test : null}, testExists : { Test : null}, testAddOnceDispatch : { Test : null}, testAddMultiDispatch : { Test : null}, testExample : { Test : null}, setup : { Before : null}}};
 TestMain.main();
 function $hxExpose(src, path) {
 	var o = typeof window != "undefined" ? window : exports;

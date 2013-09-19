@@ -1,7 +1,9 @@
 import massive.munit.TestSuite;
 
-import signals.OSignalDynamicTest;
 import signals.OSignalIntTest;
+import signals.OSignalMouseTest;
+import signals.OSignalTest;
+import signals.OSignalTTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -15,7 +17,9 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
-		add(signals.OSignalDynamicTest);
 		add(signals.OSignalIntTest);
+		add(signals.OSignalMouseTest);
+		add(signals.OSignalTest);
+		add(signals.OSignalTTest);
 	}
 }
