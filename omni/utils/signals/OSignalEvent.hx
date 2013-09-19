@@ -7,14 +7,12 @@ import flash.display.DisplayObjectContainer;
 
 /**
 * 
-* OpenFL Based Mouse Signal
+* OpenFL Flash Event Signal
 * 
-* Provides a new API and organisation for the Flash Event System
-* 
-* Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
+* Provides a new API and organisation for the OpenFL Mouse Event System
 * 
 **/
-class OSignalEvent extends OSignalType<OSignalEvent> implements IOSignalType<OSignalEvent>
+class OSignalEvent extends OSignalCore<OSignalEvent> implements IOSignalType<OSignalEvent>
 {
     inline public static var ACTIVATE = "activate";
     inline public static var ADDED = "added";

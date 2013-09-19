@@ -2,4 +2,8 @@ package omni.utils.signals;
 
 import omni.utils.signals.IOSignalType;
 
-class OSignalString extends OSignalType<String> implements IOSignalType<String> {}
+/**
+*   String Type Signal that dispatch a String value
+*
+**/
+class OSignalString extends OSignalCore<String> implements IOSignalType<String> {}

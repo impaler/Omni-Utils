@@ -1,8 +1,13 @@
 package omni.utils.signals;
 
+/**
+*   IOSignalType base interface.
+*   Also helps with Ideas autocompletion
+**/
 interface IOSignalType<T>
 {
-	var length(get_length, null):Int;
+	var listeners(default, null):List<Dynamic>;
+	var numListeners(get_numListeners, null):Int;
 
 	function exists(listener:Dynamic):Bool;
 
