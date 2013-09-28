@@ -22,8 +22,8 @@ hello.add(funciton(){trace("Hello World")});
 hello.dispatch();
 ```
 
-OSignals has added advantage of methods such as addOnce, addFirst, exists, remove, removeAll and numListeners.
-See the ./tests/signals/* to see example usage.
+OSignals has added advantage of methods such as `addOnce`, `addFirst`, `exists`, `remove`, `removeAll` and `numListeners`.
+See the `./tests/signals/*` for example usage.
 
 The OSignals have munit test written to demonstrate the api and maintain stability.
 
