@@ -1,11 +1,10 @@
 package signals;
 
-import massive.munit.util.Timer;
 import massive.munit.Assert;
 
-import omni.utils.signals.OSignalDynamic;
+import omni.utils.signals.OSignal;
 
-class OSignalDynamicTest
+class OSignalTest
 {
 	private var dispatched:Bool;
 	private var addOnce:Int;
@@ -22,7 +21,7 @@ class OSignalDynamicTest
 	@Test
 	public function testExample():Void
 	{
-		var signal = new OSignalDynamic();
+		var signal = new OSignal();
 		signal.add( function(){dispatched = true;});
 		signal.dispatch();
 
@@ -32,7 +31,7 @@ class OSignalDynamicTest
 	@Test
 	public function testAddMultiDispatch():Void
 	{
-		var signal = new OSignalDynamic();
+		var signal = new OSignal();
 		signal.add( function(){signalVoidDispatched++;});
 
 		for( i in 0...4 ) {
@@ -45,7 +44,7 @@ class OSignalDynamicTest
 	@Test
 	public function testAddOnceDispatch():Void
 	{
-		var signal = new OSignalDynamic();
+		var signal = new OSignal();
 		signal.addOnce( function(){addOnce++;} );
 
 		for (i in 0...10)
@@ -61,12 +60,12 @@ class OSignalDynamicTest
 	{
 		var testFunction = function(){};
 		
-		var signal = new OSignalDynamic();
+		var signal = new OSignal();
 		signal.add( testFunction );
 
 		Assert.isTrue(signal.exists(testFunction));
 
-		var signalFalse = new OSignalDynamic();
+		var signalFalse = new OSignal();
 		Assert.isFalse(signalFalse.exists(testFunction));
 	}
 
@@ -78,7 +77,7 @@ class OSignalDynamicTest
 		var testFunction2 = function(){};
 		var testFunction3 = function(){};
 
-		var signal = new OSignalDynamic();
+		var signal = new OSignal();
 		signal.add( testFunction0 );
 		signal.add( testFunction1 );
 		signal.add( testFunction2 );
@@ -90,11 +89,11 @@ class OSignalDynamicTest
 
 		Assert.isFalse(signal.exists(testFunction0));
 		Assert.isTrue(signal.exists(testFunction1));
-		Assert.isTrue(signal.length == 3);
+		Assert.isTrue(signal.numListeners == 3);
 
 		signal.removeAll();
 
-		Assert.isTrue(signal.length == 0);
+		Assert.isTrue(signal.numListeners == 0);
 		Assert.isFalse(signal.exists(testFunction0));
 	}
 
@@ -106,14 +105,14 @@ class OSignalDynamicTest
 		var testFunction2 = function(){};
 		var testFunction3 = function(){};
 
-		var signal = new OSignalDynamic();
+		var signal = new OSignal();
 		signal.add( testFunction0 );
 		signal.add( testFunction1 );
 		signal.add( testFunction2 );
 		signal.add( testFunction3 );
 
-		Assert.isFalse(signal.length == 0);
-		Assert.isTrue(signal.length == 4);
+		Assert.isFalse(signal.numListeners == 0);
+		Assert.isTrue(signal.numListeners == 4);
 	}
 
 }

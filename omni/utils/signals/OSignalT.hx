@@ -9,7 +9,7 @@ package omni.utils.signals;
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
 **/
-class OSignalCore<T>
+class OSignalT<T>
 {
 
 	public var listeners(default, null):List<Dynamic>;

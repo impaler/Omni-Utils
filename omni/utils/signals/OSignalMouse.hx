@@ -14,7 +14,7 @@ import flash.display.DisplayObjectContainer;
 * Based on work by ralcr/sdk.ralcr and robertpenner/as3-signals
 * 
 **/
-class OSignalMouse extends OSignalCore<OSignalMouse> implements IOSignalType<OSignalMouse>
+class OSignalMouse extends OSignalT<OSignalMouse> implements IOSignalType<OSignalMouse>
 {
 
     inline public static var CLICK = "mouseclick";

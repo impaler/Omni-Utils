@@ -2,7 +2,7 @@ package signals;
 
 import flash.events.MouseEvent;
 import flash.Lib;
-import flash.display.Sprite;
+
 import massive.munit.Assert;
 
 import omni.utils.signals.OSignalMouse;

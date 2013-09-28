@@ -6,4 +6,4 @@ import omni.utils.signals.IOSignalType;
 *   Int Type Signal that dispatch a Int value
 *
 **/
-class OSignalInt extends OSignalCore<Int> implements IOSignalType<Int> {}
+class OSignalInt extends OSignalT<Int> implements IOSignalType<Int> {}
